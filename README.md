@@ -1,2 +1,4 @@
-# quadtree-py
-a python quadtree that uses a shared library for speed
+# PERQI
+Python Efficient Rust Quadtree Interface
+A quadtree implementation for python via ffi to rust.
+
