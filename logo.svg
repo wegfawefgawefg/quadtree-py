@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240" role="img" aria-labelledby="title desc">
+  <title id="title">PERQI logo</title>
+  <desc id="desc">Stylized quadtree logo for the Python Efficient Rust Quadtree Interface project.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="accent2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="760" height="240" rx="28" fill="url(#bg)"/>
+
+  <g transform="translate(36 36)">
+    <rect x="0" y="0" width="168" height="168" rx="18" fill="#0b1220" stroke="#e5e7eb" stroke-width="6"/>
+    <line x1="84" y1="0" x2="84" y2="168" stroke="url(#accent)" stroke-width="6"/>
+    <line x1="0" y1="84" x2="168" y2="84" stroke="url(#accent)" stroke-width="6"/>
+
+    <rect x="18" y="18" width="40" height="32" rx="8" fill="#60a5fa"/>
+    <rect x="98" y="30" width="42" height="36" rx="8" fill="#f59e0b"/>
+    <rect x="24" y="110" width="52" height="34" rx="8" fill="#22c55e"/>
+    <rect x="104" y="102" width="34" height="44" rx="8" fill="#a78bfa"/>
+
+    <circle cx="84" cy="84" r="10" fill="#f8fafc"/>
+  </g>
+
+  <g transform="translate(228 58)">
+    <text x="0" y="42" font-family="DejaVu Sans Mono, Consolas, monospace" font-size="54" font-weight="700" fill="#f8fafc">PERQI</text>
+    <text x="2" y="84" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" fill="#cbd5e1">Python Efficient Rust Quadtree Interface</text>
+
+    <g transform="translate(0 118)">
+      <rect x="0" y="0" width="142" height="34" rx="17" fill="#172033" stroke="#334155" stroke-width="2"/>
+      <text x="24" y="23" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" fill="#93c5fd">Python</text>
+
+      <rect x="156" y="0" width="118" height="34" rx="17" fill="#172033" stroke="#334155" stroke-width="2"/>
+      <text x="187" y="23" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" fill="#fbbf24">Rust</text>
+
+      <rect x="288" y="0" width="150" height="34" rx="17" fill="#172033" stroke="#334155" stroke-width="2"/>
+      <text x="315" y="23" font-family="DejaVu Sans, Arial, sans-serif" font-size="16" fill="#86efac">ctypes FFI</text>
+    </g>
+  </g>
+</svg>

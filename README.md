@@ -2,6 +2,8 @@
 
 Python Efficient Rust Quadtree Interface.
 
+![PERQI logo](logo.svg)
+
 This is a small January 2024 experiment comparing:
 
 - a native Python quadtree
@@ -26,4 +28,4 @@ uv run perqi-benchmark --build-rust
 
 - The Rust side lives in [rust_quadtree](/home/vega/Coding/GameDev/quadtree-py/rust_quadtree).
 - The Python package lives in [src/perqi](/home/vega/Coding/GameDev/quadtree-py/src/perqi).
-- `rqttest` is a separate old Rust-side scratch area and is left here as-is.
+- Future improvement ideas are in [docs/improvements.md](/home/vega/Coding/GameDev/quadtree-py/docs/improvements.md).

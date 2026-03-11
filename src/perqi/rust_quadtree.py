@@ -6,6 +6,15 @@ import sys
 from pathlib import Path
 
 
+class _QueryManyResult(ctypes.Structure):
+    _fields_ = [
+        ("ids", ctypes.POINTER(ctypes.c_uint)),
+        ("ids_len", ctypes.c_size_t),
+        ("counts", ctypes.POINTER(ctypes.c_size_t)),
+        ("counts_len", ctypes.c_size_t),
+    ]
+
+
 def _repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
@@ -79,6 +88,16 @@ class RustQuadTree:
         ]
         self.lib.quadtree_query_results_free.restype = None
 
+        self.lib.quadtree_query_many_points.argtypes = [
+            ctypes.c_void_p,
+            ctypes.POINTER(ctypes.c_float),
+            ctypes.c_size_t,
+        ]
+        self.lib.quadtree_query_many_points.restype = _QueryManyResult
+
+        self.lib.quadtree_query_many_results_free.argtypes = [_QueryManyResult]
+        self.lib.quadtree_query_many_results_free.restype = None
+
         self.lib.quadtree_free.argtypes = [ctypes.c_void_p]
         self.lib.quadtree_free.restype = None
 
@@ -98,6 +117,29 @@ class RustQuadTree:
             return [int(ids_ptr[i]) for i in range(length.value)]
         finally:
             self.lib.quadtree_query_results_free(ids_ptr, length.value)
+
+    def query_many_points(self, points: list[tuple[float, float]]) -> list[list[int]]:
+        flat_points: list[float] = []
+        for x, y in points:
+            flat_points.extend((x, y))
+
+        flat = (ctypes.c_float * len(flat_points))(*flat_points)
+        result = self.lib.quadtree_query_many_points(self.tree, flat, len(flat_points))
+        if not result.counts:
+            return []
+
+        try:
+            counts = [int(result.counts[i]) for i in range(result.counts_len)]
+            ids = [int(result.ids[i]) for i in range(result.ids_len)]
+
+            rebuilt: list[list[int]] = []
+            cursor = 0
+            for count in counts:
+                rebuilt.append(ids[cursor : cursor + count])
+                cursor += count
+            return rebuilt
+        finally:
+            self.lib.quadtree_query_many_results_free(result)
 
     def close(self) -> None:
         if getattr(self, "tree", None):

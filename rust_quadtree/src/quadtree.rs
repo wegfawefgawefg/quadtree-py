@@ -80,6 +80,26 @@ impl QuadTree {
     pub fn query_point(&self, point: &Point) -> Vec<u32> {
         self.root.query_point(point)
     }
+
+    pub fn query_many_points(&self, points: &[f32]) -> (Vec<u32>, Vec<usize>) {
+        let mut ids = Vec::new();
+        let mut counts = Vec::new();
+
+        for chunk in points.chunks(2) {
+            if chunk.len() != 2 {
+                continue;
+            }
+            let point = Point {
+                x: chunk[0],
+                y: chunk[1],
+            };
+            let found = self.query_point(&point);
+            counts.push(found.len());
+            ids.extend(found);
+        }
+
+        (ids, counts)
+    }
 }
 
 struct QuadTreeNode {

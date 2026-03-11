@@ -58,6 +58,10 @@ def rust_query(tree: RustQuadTree, queries: list[tuple[float, float]]) -> list[l
     return results
 
 
+def rust_query_many(tree: RustQuadTree, queries: list[tuple[float, float]]) -> list[list[int]]:
+    return [sorted(result) for result in tree.query_many_points(queries)]
+
+
 def benchmark(name: str, fn, repeats: int) -> tuple[float, float]:
     samples: list[float] = []
     for _ in range(repeats):
@@ -89,17 +93,25 @@ def main() -> None:
     )
 
     rust_build_ms, rust_build_best = benchmark(
-        "rust-build", lambda: build_rust(rects, build_if_missing=args.build_rust).close(), args.repeats
+        "rust-build",
+        lambda: build_rust(rects, build_if_missing=args.build_rust).close(),
+        args.repeats,
     )
     rust_tree = build_rust(rects, build_if_missing=args.build_rust)
     rust_query_ms, rust_query_best = benchmark(
         "rust-query", lambda: rust_query(rust_tree, queries), args.repeats
     )
+    rust_query_many_ms, rust_query_many_best = benchmark(
+        "rust-query-many",
+        lambda: rust_query_many(rust_tree, queries),
+        args.repeats,
+    )
 
     native_results = native_query(native_tree, queries[:100])
     rust_results = rust_query(rust_tree, queries[:100])
+    rust_many_results = rust_query_many(rust_tree, queries[:100])
     rust_tree.close()
-    if native_results != rust_results:
+    if native_results != rust_results or native_results != rust_many_results:
         raise SystemExit("native and rust query results diverged")
 
     print(f"rectangles: {args.rects}")
@@ -109,3 +121,6 @@ def main() -> None:
     print(f"native query: mean {native_query_ms:.3f} ms | best {native_query_best:.3f} ms")
     print(f"rust build:   mean {rust_build_ms:.3f} ms | best {rust_build_best:.3f} ms")
     print(f"rust query:   mean {rust_query_ms:.3f} ms | best {rust_query_best:.3f} ms")
+    print(
+        f"rust query-many: mean {rust_query_many_ms:.3f} ms | best {rust_query_many_best:.3f} ms"
+    )
