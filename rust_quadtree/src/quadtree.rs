@@ -32,6 +32,13 @@ impl Rectangle {
             && self.top_left.y < other.top_left.y + other.size.height
             && self.top_left.y + self.size.height > other.top_left.y
     }
+
+    pub fn contains_rect(&self, other: &Rectangle) -> bool {
+        self.top_left.x <= other.top_left.x
+            && self.top_left.y <= other.top_left.y
+            && self.top_left.x + self.size.width >= other.top_left.x + other.size.width
+            && self.top_left.y + self.size.height >= other.top_left.y + other.size.height
+    }
 }
 
 pub struct QuadTree {
@@ -98,8 +105,16 @@ impl QuadTreeNode {
             return false;
         }
 
+        if let Some(ref mut children) = self.children {
+            for child in children.iter_mut() {
+                if child.boundary.contains_rect(rect) {
+                    return child.insert(rect, id);
+                }
+            }
+        }
+
         // If the current node has space for more items, just add the item
-        if self.items.len() < QuadTreeNode::MAX_ITEMS && self.children.is_none() {
+        if self.items.len() < QuadTreeNode::MAX_ITEMS {
             self.items.push(Item {
                 area: Rectangle {
                     top_left: Point {
@@ -121,16 +136,28 @@ impl QuadTreeNode {
             self.subdivide();
         }
 
-        // Try to insert the item into each of the children
         if let Some(ref mut children) = self.children {
             for child in children.iter_mut() {
-                if child.insert(rect, id) {
-                    return true;
+                if child.boundary.contains_rect(rect) {
+                    return child.insert(rect, id);
                 }
             }
         }
 
-        return false;
+        self.items.push(Item {
+            area: Rectangle {
+                top_left: Point {
+                    x: rect.top_left.x,
+                    y: rect.top_left.y,
+                },
+                size: Size {
+                    width: rect.size.width,
+                    height: rect.size.height,
+                },
+            },
+            id,
+        });
+        true
     }
 
     pub fn query_point(&self, point: &Point) -> Vec<u32> {

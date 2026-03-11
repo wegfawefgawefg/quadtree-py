@@ -37,7 +37,7 @@ pub unsafe extern "C" fn quadtree_query_point(
     x: c_float,
     y: c_float,
     out_len: *mut usize,
-) -> *mut i32 {
+) -> *mut c_uint {
     if tree.is_null() || out_len.is_null() {
         return std::ptr::null_mut();
     }
@@ -52,7 +52,17 @@ pub unsafe extern "C" fn quadtree_query_point(
         *out_len = len;
     }
 
-    Box::into_raw(boxed_ids) as *mut i32
+    Box::into_raw(boxed_ids) as *mut c_uint
+}
+
+#[no_mangle]
+#[allow(clippy::missing_safety_doc)]
+pub unsafe extern "C" fn quadtree_query_results_free(ids: *mut c_uint, len: usize) {
+    if !ids.is_null() {
+        unsafe {
+            let _ = Vec::from_raw_parts(ids, len, len);
+        };
+    }
 }
 
 #[no_mangle]
