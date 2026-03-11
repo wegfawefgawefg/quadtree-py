@@ -30,19 +30,6 @@ pub unsafe extern "C" fn quadtree_insert_many(
     }
 }
 
-// #[no_mangle]
-// #[allow(clippy::missing_safety_doc)]
-// pub unsafe extern "C" fn quadtree_query_point(
-//     tree: *const QuadTree,
-//     x: c_float,
-//     y: c_float,
-// ) -> *const c_uint {
-//     let point = Point { x, y };
-//     let ids = unsafe { (*tree).query_point(&point) };
-//     let boxed_ids = Box::new(ids);
-//     Box::into_raw(boxed_ids) as *const c_uint
-// }
-
 #[no_mangle]
 #[allow(clippy::missing_safety_doc)]
 pub unsafe extern "C" fn quadtree_query_point(

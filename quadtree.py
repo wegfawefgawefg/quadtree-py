@@ -9,8 +9,18 @@ class Rectangle:
 
     def contains(self, point):
         return (
-            self.position.x <= point.x < self.position.x + self.size.x
-            and self.position.y <= point.y < self.position.y + self.size.y
+            point.x >= self.position.x
+            and point.x <= self.position.x + self.size.x
+            and point.y >= self.position.y
+            and point.y <= self.position.y + self.size.y
+        )
+
+    def intersects(self, other):
+        return (
+            self.position.x < other.position.x + other.size.x
+            and self.position.x + self.size.x > other.position.x
+            and self.position.y < other.position.y + other.size.y
+            and self.position.y + self.size.y > other.position.y
         )
 
 
@@ -36,10 +46,7 @@ class QuadTreeNode:
         )
 
     def insert(self, rectangle):
-        # Check if the rectangle can be inserted in this quad
-        if not self.boundary.contains(
-            glm.vec2(rectangle.position.x, rectangle.position.y)
-        ):
+        if not self.boundary.intersects(rectangle):
             return False
 
         # If there's space in this quad and no subdivisions, add the rectangle here
